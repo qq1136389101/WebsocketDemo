@@ -1,2 +1,2 @@
 # WebsocketDemo
-springboot整合websocket的demo
+简单的整合了springboot和websocket
