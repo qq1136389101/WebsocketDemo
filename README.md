@@ -29,7 +29,7 @@ groupId | 组id
 
 ### 发送消息
 #### 发送给单个用户  
-`http://localhost/sendMessageToUser?userName=g1&content=测试`
+`http://localhost/sendMessageToUser?userName=1&content=测试`
 
 参数 | 作用
 ---|---
