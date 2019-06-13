@@ -1,11 +1,5 @@
 
-server:
-    port: 80
 spring:
-  mvc:
-    view:
-      suffix: .jsp
-      prefix: /WEB-INF/jsp/
-  devtools:
-    restart:
-      enabled: true
+  profiles:
+    active: dev
+

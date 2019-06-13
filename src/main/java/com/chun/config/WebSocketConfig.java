@@ -1,24 +1,30 @@
 package com.chun.config;
 
-import com.chun.config.MySpringConfigurator;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
-import org.springframework.context.annotation.Bean;
+
+import com.chun.service.impl.CTIHandler;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.socket.server.standard.ServerEndpointExporter;
+import org.springframework.web.socket.config.annotation.EnableWebSocket;
+import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
+import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry;
+
+/**
+ * Redis配置
+ *
+ * @author Mark sunlightcs@gmail.com
+ */
 
 @Configuration
-@ConditionalOnWebApplication
-public class WebSocketConfig  {
+@EnableWebSocket
+public class WebSocketConfig implements WebSocketConfigurer {
 
-    //使用boot内置tomcat时需要注入此bean
-    @Bean
-    public ServerEndpointExporter serverEndpointExporter() {
-        return new ServerEndpointExporter();
+    @Override
+    public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
+        //handler是webSocket的核心，配置入口
+
+        // 普通版的
+        registry.addHandler(new CTIHandler(), "/websocket").setAllowedOrigins("*").addInterceptors(new WebSocketInterceptor());
+        // sockjs版的
+        registry.addHandler(new CTIHandler(), "/sockjs/websocket").setAllowedOrigins("*").addInterceptors(new WebSocketInterceptor()).withSockJS();
     }
 
-
-    @Bean
-    public MySpringConfigurator mySpringConfigurator() {
-        return new MySpringConfigurator();
-    }
 }

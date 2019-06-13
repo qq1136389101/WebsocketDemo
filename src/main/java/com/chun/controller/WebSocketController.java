@@ -1,10 +1,9 @@
 package com.chun.controller;
 
-import java.io.IOException;
-
-import com.chun.websocket.WebSocketServer;
+import com.chun.util.R;
+import com.chun.service.WebSocketService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 
 /**
  * WebSocket服务器端推送消息示例Controller
@@ -15,25 +14,27 @@ import org.springframework.web.servlet.ModelAndView;
 @RestController
 public class WebSocketController {
 
-    //页面请求
-    @GetMapping("/socket/{cid}")
-    public ModelAndView socket(@PathVariable String cid) {
-        ModelAndView mav=new ModelAndView("index");
-        mav.addObject("cid", cid);
-        return mav;
-    }
-    //推送数据接口
-    @ResponseBody
-    @RequestMapping("/socket/push/{cid}")
-    public String pushToWeb(@PathVariable String cid,String message) {
+    @Autowired
+    WebSocketService webSocketService;
+
+    @RequestMapping("/sendMessageToUser")
+    public R sendMessageToUser(String userName, String content){
         try {
-            WebSocketServer.sendInfo(message,cid);
-            System.out.println("发送给id为"+cid+":"+message);
-        } catch (IOException e) {
-            e.printStackTrace();
-            return cid+"#"+e.getMessage();
+            webSocketService.sendByUserName(userName, content);
+        } catch (Exception e) {
+            return R.error("发送消息失败");
         }
-        return cid;
+        return R.ok();
+    }
+
+    @RequestMapping("/sendMessageToGroup")
+    public R sendMessageToGroup(String groupId, String content){
+        try {
+            webSocketService.sendByGroupId(groupId, content);
+        } catch (Exception e) {
+            return R.error("发送消息失败");
+        }
+        return R.ok();
     }
 
 }
